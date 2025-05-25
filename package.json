@@ -1,0 +1,12 @@
+{
+    "name": "drg.tools",
+    "version": "0.0.1",
+    "displayName": "DRG Tools",
+    "description": "Tools for Unity",
+    "unity": "2022.3",
+    "author": {
+        "name": "Jan Mašarski",
+        "email": "yanmasharski@gmail.com",
+        "url": "https://yanmasharski.github.io"
+    }
+}
