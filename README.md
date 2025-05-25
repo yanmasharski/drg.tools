@@ -12,7 +12,7 @@ DRG Tools is a Unity package that provides various utilities and tools to stream
 2. Open the Package Manager (Window > Package Manager)
 3. Click the "+" button in the top-left corner
 4. Select "Add package from git URL..."
-5. Enter the repository URL
+5. Enter the repository URL "https://github.com/yanmasharski/drg.tools.git"
 6. Click "Add"
 
 ## Package Structure
