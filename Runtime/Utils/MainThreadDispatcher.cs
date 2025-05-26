@@ -27,8 +27,7 @@ namespace DRG.Utils
         /// </summary>
         static MainThreadDispatcher()
         {
-            instance = new GameObject("MainThreadDispatcher").AddComponent<MainThreadDispatcherBehaviour>();
-            Object.DontDestroyOnLoad(instance.gameObject);
+            instance = StaticMonoBehaviour.instance.gameObject.AddComponent<MainThreadDispatcherBehaviour>();
         }
 
         /// <summary>
@@ -50,11 +49,26 @@ namespace DRG.Utils
         /// </summary>
         private class MainThreadDispatcherBehaviour : MonoBehaviour
         {
+            private void Update()
+            {
+                ProcessActions();
+            }
+
+            private void LateUpdate()
+            {
+                ProcessActions();
+            }
+
+            private void FixedUpdate()
+            {
+                ProcessActions();
+            }
+
             /// <summary>
             /// Executes all queued actions on the main thread.
             /// Catches and logs any exceptions that occur during execution.
             /// </summary>
-            private void Update()
+            private void ProcessActions()
             {
                 while (actions.TryDequeue(out var action))
                 {

@@ -6,27 +6,25 @@ namespace DRG.Utils
     /// <summary>
     /// Internal MonoBehaviour that handles delayed save operations.
     /// </summary>
-    public class DebouncedExecutorFrames : MonoBehaviour, IDebouncedExecutor
+    public class DebouncedExecutorUnity : IDebouncedExecutor
     {
+        private readonly MonoBehaviour monoBehaviour;
         private Coroutine saveCoroutine;
         private int framesCooldown;
 
-        public static DebouncedExecutorFrames current { get; private set; }
-        
-        public static void Init()
+        public DebouncedExecutorUnity(MonoBehaviour monoBehaviour)
         {
-            current = new GameObject("DebouncedExecutorFrames").AddComponent<DebouncedExecutorFrames>();
-            GameObject.DontDestroyOnLoad(current.gameObject);
+            this.monoBehaviour = monoBehaviour;
         }
 
         public void Execute(int framesCooldown, IEnumerator action)
         {
             if (saveCoroutine != null)
             {
-                StopCoroutine(saveCoroutine);
+                monoBehaviour.StopCoroutine(saveCoroutine);
             }
 
-            saveCoroutine = StartCoroutine(SaveCoroutine(framesCooldown, action));
+            saveCoroutine = monoBehaviour.StartCoroutine(SaveCoroutine(framesCooldown, action));
         }
 
         /// <summary>

@@ -8,5 +8,8 @@
         "name": "Jan Mašarski",
         "email": "yanmasharski@gmail.com",
         "url": "https://yanmasharski.github.io"
+    },
+    "dependencies": {
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
     }
 }
