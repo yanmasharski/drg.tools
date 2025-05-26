@@ -244,7 +244,7 @@ namespace DRG.Data
             lock (lockObject)
             {
                 var processed = false;
-                while (!processed)
+                while (!processed && recordsObject.Count > 0)
                 {
                     foreach (var record in recordsObject)
                     {

@@ -1,13 +1,9 @@
 {
-    "name": "DRG.Editor",
-    "rootNamespace": "",
-    "references": [
-        "GUID:220dbf228530a4b0cace416a172bdafe"
-    ],
+    "name": "DRG.Runtime",
+    "rootNamespace": "DRG",
+    "references": [],
     "includePlatforms": [],
-    "excludePlatforms": [
-        "Editor"
-    ],
+    "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],

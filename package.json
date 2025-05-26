@@ -10,6 +10,10 @@
         "url": "https://yanmasharski.github.io"
     },
     "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-    }
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
+        "com.unity.test-framework": "1.1.33"
+    },
+    "testables": [
+        "com.unity.test-framework"
+    ]
 }
