@@ -5,7 +5,7 @@ namespace DRG.Data
     public interface IDataStorage
     {
         /// <summary>
-        /// Checks if a key exists in any of the data records or in PlayerPrefs.
+        /// Checks if a key exists in any of the data records.
         /// </summary>
         /// <param name="key">The key to check.</param>
         /// <returns>True if the key exists, false otherwise.</returns>
@@ -64,7 +64,7 @@ namespace DRG.Data
         void EraseAll();
 
         /// <summary>
-        /// Saves all dirty records to PlayerPrefs. Can be delayed by specifying a frame cooldown.
+        /// Saves all dirty records. Can be delayed by specifying a frame cooldown.
         /// </summary>
         /// <param name="framesCooldown">Number of frames to wait before saving. If greater than 0,
         /// the save operation will be performed after the specified number of frames.</param>
