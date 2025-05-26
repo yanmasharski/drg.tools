@@ -1,5 +1,5 @@
 {
-    "name": "DRG.Runtime",
+    "name": "DRG.Tools",
     "rootNamespace": "DRG",
     "references": [],
     "includePlatforms": [],

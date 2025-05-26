@@ -21,7 +21,7 @@ namespace DRG.Data
         private readonly Dictionary<string, ITypedDataRecord<bool>> recordsBool = new Dictionary<string, ITypedDataRecord<bool>>();
         private readonly Dictionary<string, ITypedDataRecord<float>> recordsFloat = new Dictionary<string, ITypedDataRecord<float>>();
         private readonly Dictionary<string, ITypedDataRecord<string>> recordsString = new Dictionary<string, ITypedDataRecord<string>>();
-        private readonly Dictionary<string, ITypedDataRecord<object>> recordsObject = new Dictionary<string, ITypedDataRecord<object>>();
+        private readonly Dictionary<string, DataRecordObject> recordsObject = new Dictionary<string, DataRecordObject>(); // TODO: Think how to migrate to interfaces
         private readonly object lockObject = new object();
 
         private readonly IDataProvider dataProvider;
@@ -44,11 +44,11 @@ namespace DRG.Data
 
         public bool ContainsKey(string key)
         {
-            return recordsInt.ContainsKey(key) ||
-                recordsBool.ContainsKey(key) ||
-                recordsFloat.ContainsKey(key) ||
-                recordsString.ContainsKey(key) ||
-                recordsObject.ContainsKey(key) ||
+            return (recordsInt.TryGetValue(key, out var intRecord) && intRecord.hasValue) ||
+                (recordsBool.TryGetValue(key, out var boolRecord) && boolRecord.hasValue) ||
+                (recordsFloat.TryGetValue(key, out var floatRecord) && floatRecord.hasValue) ||
+                (recordsString.TryGetValue(key, out var stringRecord) && stringRecord.hasValue) ||
+                (recordsObject.TryGetValue(key, out var objectRecord) && objectRecord.hasValue) ||
                 dataProvider.ContainsKey(key);
         }
 
@@ -118,7 +118,7 @@ namespace DRG.Data
                     recordsObject[key] = result;
                 }
 
-                return result as ITypedDataRecord<T>;
+                return result.GetTypedDataRecord<T>();
             }
         }
 
@@ -131,6 +131,8 @@ namespace DRG.Data
                     record.Erase();
                 }
             }
+
+            dataProvider.DeleteKey(key);
         }
 
         public void EraseAll()

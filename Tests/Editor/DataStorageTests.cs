@@ -220,9 +220,10 @@ namespace DRG.Tests
             Assert.That(retrievedRecord.isDirty, Is.False);
         }
 
+        [Serializable]
         private class TestObject
         {
-            public int Value { get; set; }
+            public int Value;
         }
 
         private class MockDataProvider : IDataProvider
@@ -292,10 +293,25 @@ namespace DRG.Tests
 
         private class MockLogger : ILogger
         {
-            public void Log(string message) { }
-            public void LogWarning(string message) { }
-            public void LogError(string message) { }
-            public void LogException(Exception exception) { }
+            public void Log(string message)
+            {
+                Debug.Log(message);
+            }
+
+            public void LogWarning(string message)
+            {
+                Debug.LogWarning(message);
+            }
+
+            public void LogError(string message)
+            {
+                Debug.Log(message);
+            }
+
+            public void LogException(Exception exception)
+            {
+                Debug.Log(exception.Message);
+            }
         }
 
         private class MockDebouncedExecutor : IDebouncedExecutor

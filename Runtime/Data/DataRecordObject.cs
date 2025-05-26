@@ -46,9 +46,9 @@ namespace DRG.Data
             return value;
         }
 
-        public T GetValue<T>()
+        public ITypedDataRecord<T> GetTypedDataRecord<T>()
         {
-            return (T)value;
+            return new DataRecordObjectProxy<T>(this);
         }
 
         public void Apply()
@@ -76,6 +76,41 @@ namespace DRG.Data
         {
             dataProvider.DeleteKey(key);
             hasValueCache = false;
+        }
+        private class DataRecordObjectProxy<T> : ITypedDataRecord<T>
+        {
+            private readonly DataRecordObject dataRecordObject;
+
+            public DataRecordObjectProxy(DataRecordObject dataRecordObject)
+            {
+                this.dataRecordObject = dataRecordObject;
+            }
+
+            public string key => dataRecordObject.key;
+            public bool hasValue => dataRecordObject.hasValue;
+            public bool isDirty => dataRecordObject.isDirty;
+            public bool processed => dataRecordObject.processed;
+
+            public void SetValue(T value)
+            {
+                dataRecordObject.SetValue(value);
+            }
+
+            public T GetValue()
+            {
+                return (T)dataRecordObject.GetValue();
+            }
+
+            public void Apply()
+            {
+                dataRecordObject.Apply();
+            }
+
+            public void Erase()
+            {
+                dataRecordObject.Erase();
+            }
+
         }
     }
 }
