@@ -12,7 +12,7 @@ namespace DRG.Data
         public DataProviderPlayerPrefs()
         {
 #if UNITY_IOS
-        Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+        System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
 #endif
         }
 
