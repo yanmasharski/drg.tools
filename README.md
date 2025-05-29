@@ -26,6 +26,8 @@ The Runtime folder contains the core functionality of the package:
 - **Data**: Contains data structures and models used throughout the package
 - **Utils**: Utility functions and helper classes
 - **Logs**: Logging functionality and related utilities
+- **Ads**: Ad integrations and ad-related utilities
+- **Core**: Core functionality and utilities
 
 ### Editor
 
@@ -33,7 +35,13 @@ The Editor folder contains Unity Editor-specific tools and extensions.
 
 ## Features
 
-- [Feature documentation will be added as features are implemented]
+- Applovin Ads support (use scripting define symbols "DRG_APPLOVIN" to enable)
+- Data storage and management
+- Debounced executor for Unity MonoBehaviour
+
+## Examples
+
+To get started with the package, you can refer to the provided examples in the Examples folder.
 
 ## Requirements
 

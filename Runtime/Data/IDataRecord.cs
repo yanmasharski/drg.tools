@@ -1,5 +1,8 @@
 namespace DRG.Data
 {
+    /// <summary>
+    /// Interface for data records that store and manage persistent values.
+    /// </summary>
     public interface IDataRecord
     {
         /// <summary>

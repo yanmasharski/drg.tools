@@ -228,7 +228,8 @@ namespace DRG.Tests
 
         private class MockDataProvider : IDataProvider
         {
-            private readonly System.Collections.Generic.Dictionary<string, object> storage = new System.Collections.Generic.Dictionary<string, object>();
+            private readonly System.Collections.Generic.Dictionary<string, object> storage =
+                new System.Collections.Generic.Dictionary<string, object>();
 
             public int GetInt(string key, int defaultValue)
             {
@@ -316,12 +317,30 @@ namespace DRG.Tests
 
         private class MockDebouncedExecutor : IDebouncedExecutor
         {
-            public void Execute(int framesCooldown, IEnumerator action)
+            public IDebouncedExecutor.ICommand Execute(int framesCooldown, IEnumerator action)
             {
                 // Execute immediately for testing
-                while (action.MoveNext()) { }
+                while (action.MoveNext())
+                {
+                }
+
+                return new CommandMock();
+            }
+
+            public IDebouncedExecutor.ICommand Execute(int framesCooldown, Action action)
+            {
+                action.Invoke();
+                return new CommandMock();
+            }
+
+            private class CommandMock : IDebouncedExecutor.ICommand
+            {
+                public bool isRunning => false;
+
+                public void Cancel()
+                {
+                }
             }
         }
     }
 }
-

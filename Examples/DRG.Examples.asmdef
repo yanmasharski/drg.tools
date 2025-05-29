@@ -1,10 +1,12 @@
 {
-    "name": "DRG.Tools",
-    "rootNamespace": "DRG",
+    "name": "DRG.Examples",
+    "rootNamespace": "",
     "references": [
-        "MaxSdk.Scripts"
+        "GUID:220dbf228530a4b0cace416a172bdafe"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
