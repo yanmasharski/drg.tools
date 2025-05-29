@@ -2,6 +2,9 @@ namespace DRG.Data
 {
     using DRG.Serialization;
 
+    /// <summary>
+    /// Interface for managing data storage and retrieval.
+    /// </summary>
     public interface IDataStorage
     {
         /// <summary>
@@ -10,7 +13,7 @@ namespace DRG.Data
         /// <param name="key">The key to check.</param>
         /// <returns>True if the key exists, false otherwise.</returns>
         bool ContainsKey(string key);
-        
+
         /// <summary>
         /// Gets a boolean value for the specified key. Returns the default value if the key doesn't exist.
         /// </summary>
@@ -18,7 +21,7 @@ namespace DRG.Data
         /// <param name="defaultVal">The default value to return if the key doesn't exist.</param>
         /// <returns>The stored boolean value record.</returns>
         ITypedDataRecord<bool> GetBool(string key, bool defaultVal = false);
-        
+
         /// <summary>
         /// Gets an integer value for the specified key. Returns the default value if the key doesn't exist.
         /// </summary>
@@ -34,7 +37,7 @@ namespace DRG.Data
         /// <param name="defaultVal">The default value to return if the key doesn't exist.</param>
         /// <returns>The stored float value record.</returns>
         ITypedDataRecord<float> GetFloat(string key, float defaultVal = 0f);
-        
+
         /// <summary>
         /// Gets a string value for the specified key. Returns the default value if the key doesn't exist.
         /// </summary>
@@ -42,7 +45,7 @@ namespace DRG.Data
         /// <param name="defaultVal">The default value to return if the key doesn't exist.</param>
         /// <returns>The stored string value record.</returns>
         ITypedDataRecord<string> GetString(string key, string defaultVal = "");
-        
+
         /// <summary>
         /// Gets an object value for the specified key. Returns the default value if the key doesn't exist.
         /// </summary>
@@ -51,7 +54,7 @@ namespace DRG.Data
         /// <param name="defaultVal">The default value to return if the key doesn't exist.</param>
         /// <returns>The stored object record.</returns>
         ITypedDataRecord<T> GetObject<T>(string key, T defaultVal, IDataSerializer serializer);
-        
+
         /// <summary>
         /// Deletes a key and its associated value from all records.
         /// </summary>

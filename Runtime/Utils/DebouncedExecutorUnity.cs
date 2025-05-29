@@ -1,50 +1,121 @@
 namespace DRG.Utils
 {
+    using System;
+    using ILogger = Logs.ILogger;
     using UnityEngine;
     using System.Collections;
-
+    
     /// <summary>
     /// Internal MonoBehaviour that handles delayed save operations.
     /// </summary>
     public class DebouncedExecutorUnity : IDebouncedExecutor
     {
         private readonly MonoBehaviour monoBehaviour;
-        private Coroutine saveCoroutine;
-        private int framesCooldown;
+        private readonly ILogger logger;
 
-        public DebouncedExecutorUnity(MonoBehaviour monoBehaviour)
+        public DebouncedExecutorUnity(MonoBehaviour monoBehaviour, ILogger logger)
         {
             this.monoBehaviour = monoBehaviour;
+            this.logger = logger;
         }
 
-        public void Execute(int framesCooldown, IEnumerator action)
+        public IDebouncedExecutor.ICommand Execute(int cooldown, IEnumerator action)
         {
-            if (saveCoroutine != null)
-            {
-                monoBehaviour.StopCoroutine(saveCoroutine);
-            }
-
-            saveCoroutine = monoBehaviour.StartCoroutine(SaveCoroutine(framesCooldown, action));
+            var command = new Command(monoBehaviour, logger);
+            command.Execute(cooldown, action);
+            return command;
         }
 
-        /// <summary>
-        /// Coroutine that waits for the specified number of frames before saving.
-        /// </summary>
-        /// <param name="framesCooldown">Number of frames to wait before saving.</param>
-        /// <returns>IEnumerator for the coroutine.</returns>
-        public IEnumerator SaveCoroutine(int framesCooldown, IEnumerator processAndSave)
+        public IDebouncedExecutor.ICommand Execute(int cooldown, Action action)
         {
-            this.framesCooldown = framesCooldown;
+            var command = new Command(monoBehaviour, logger);
+            command.Execute(cooldown, action);
+            return command;
+        }
 
-            while (this.framesCooldown > 0)
+        private class Command : IDebouncedExecutor, IDebouncedExecutor.ICommand
+        {
+            private readonly MonoBehaviour monoBehaviour;
+            private readonly ILogger logger;
+
+            private Coroutine executionCoroutine;
+            private int framesCooldown;
+
+            public Command(MonoBehaviour monoBehaviour, ILogger logger)
             {
-                yield return null;
-                this.framesCooldown--;
+                this.monoBehaviour = monoBehaviour;
+                this.logger = logger;
             }
 
-            yield return processAndSave;
+            public bool isRunning => executionCoroutine != null;
 
-            saveCoroutine = null;
+            public void Cancel()
+            {
+                if (executionCoroutine == null)
+                {
+                    return;
+                }
+
+                monoBehaviour.StopCoroutine(executionCoroutine);
+                executionCoroutine = null;
+            }
+
+            public IDebouncedExecutor.ICommand Execute(int framesCooldown, IEnumerator action)
+            {
+                if (executionCoroutine != null)
+                {
+                    monoBehaviour.StopCoroutine(executionCoroutine);
+                }
+
+                monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, action));
+                return this;
+            }
+
+            public IDebouncedExecutor.ICommand Execute(int framesCooldown, Action action)
+            {
+                if (executionCoroutine != null)
+                {
+                    monoBehaviour.StopCoroutine(executionCoroutine);
+                }
+
+                monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, ExecutionProxy(action)));
+                return this;
+            }
+
+            /// <summary>
+            /// Coroutine that waits for the specified number of frames before trigerring action.
+            /// </summary>
+            /// <param name="cooldown">Number of frames to wait before triggering action.</param>
+            /// <param name="action">Action to be called after delay.</param>
+            /// <returns>IEnumerator for the coroutine.</returns>
+            private IEnumerator ExecutionCoroutine(int cooldown, IEnumerator action)
+            {
+                framesCooldown = cooldown;
+
+                while (framesCooldown > 0)
+                {
+                    yield return null;
+                    framesCooldown--;
+                }
+
+                yield return action;
+
+                executionCoroutine = null;
+            }
+
+            private IEnumerator ExecutionProxy(Action action)
+            {
+                try
+                {
+                    action.Invoke();
+                }
+                catch (Exception e)
+                {
+                    logger.LogException(e);
+                }
+
+                yield break;
+            }
         }
     }
 }
