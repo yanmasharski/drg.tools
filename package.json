@@ -1,6 +1,6 @@
 {
     "name": "drg.tools",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "displayName": "DRG Tools",
     "description": "Tools for Unity",
     "unity": "2022.3",

@@ -67,7 +67,7 @@ namespace DRG.Utils
                     monoBehaviour.StopCoroutine(executionCoroutine);
                 }
 
-                monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, action));
+                executionCoroutine = monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, action));
                 return this;
             }
 
@@ -78,7 +78,7 @@ namespace DRG.Utils
                     monoBehaviour.StopCoroutine(executionCoroutine);
                 }
 
-                monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, ExecutionProxy(action)));
+                executionCoroutine = monoBehaviour.StartCoroutine(ExecutionCoroutine(framesCooldown, ExecutionProxy(action)));
                 return this;
             }
 

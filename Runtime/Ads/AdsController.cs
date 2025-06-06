@@ -17,6 +17,7 @@ namespace DRG.Ads
         {
             this.interstitial = interstitial;
             this.rewarded = rewarded;
+            this.logger = logger;
         }
 
         public bool isReadyInterstitial => interstitial.isReady;

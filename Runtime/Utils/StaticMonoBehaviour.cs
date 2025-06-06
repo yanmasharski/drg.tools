@@ -5,7 +5,6 @@ namespace DRG.Utils
     /// <summary>
     /// Static MonoBehaviour that ensures a single instance of the class is created and persists across scenes.
     /// </summary>
-    /// <typeparam name="T">The type of the StaticMonoBehaviour.</typeparam>
     public class StaticMonoBehaviour : MonoBehaviour
     {
         private static StaticMonoBehaviour instanceCache;

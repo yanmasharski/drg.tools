@@ -31,7 +31,8 @@ namespace DRG.Data
 
         public void SetValue(object value)
         {
-            if (!this.value.Equals(value))
+            if ((this.value == null && value != null) ||
+                (!this.value.Equals(value)))
             {
                 isDirty = true;
             }
@@ -68,6 +69,7 @@ namespace DRG.Data
                 {
                     dataProvider.SetString(key, serializedData);
                     processed = true;
+                    isDirty = false;
                 }
             }
         }

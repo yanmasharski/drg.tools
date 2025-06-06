@@ -16,6 +16,7 @@ namespace DRG.Data
             this.dataProvider = dataProvider;
             value = dataProvider.GetString(key, defaultValue);
             hasValueCache = dataProvider.ContainsKey(key);
+            this.logger = logger;
         }
         public string key => keyCache;
         public bool hasValue => hasValueCache;

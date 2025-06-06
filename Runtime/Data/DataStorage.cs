@@ -250,7 +250,7 @@ namespace DRG.Data
                 {
                     foreach (var record in recordsObject)
                     {
-                        processed |= record.Value.processed;
+                        processed &= record.Value.processed;
                     }
 
                     yield return null;
