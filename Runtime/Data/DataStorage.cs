@@ -235,6 +235,8 @@ namespace DRG.Data
                     hasChanges |= record.isDirty;
                     record.Apply();
                 }
+
+                yield return null;
             }
 
             if (!hasChanges)
@@ -248,6 +250,7 @@ namespace DRG.Data
                 var processed = false;
                 while (!processed && recordsObject.Count > 0)
                 {
+                    processed = true;
                     foreach (var record in recordsObject)
                     {
                         processed &= record.Value.processed;
