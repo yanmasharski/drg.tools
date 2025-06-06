@@ -63,14 +63,10 @@ namespace DRG.Data
 
             void SerializationTask()
             {
-                string serializedData = serializer.Serialize(value);
-                MainThreadDispatcher.Enqueue(OnMainThread);
-                void OnMainThread()
-                {
-                    dataProvider.SetString(key, serializedData);
-                    processed = true;
-                    isDirty = false;
-                }
+                var serializedData = serializer.Serialize(value);
+                dataProvider.SetString(key, serializedData);
+                processed = true;
+                isDirty = false;
             }
         }
 

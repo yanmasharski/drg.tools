@@ -1,5 +1,6 @@
 namespace DRG.Data
 {
+    using Utils;
     using UnityEngine;
 
     /// <summary>
@@ -8,12 +9,14 @@ namespace DRG.Data
     /// </summary>
     public class DataProviderPlayerPrefs : IDataProvider
     {
+        private readonly bool threadSafe;
 
-        public DataProviderPlayerPrefs()
+        public DataProviderPlayerPrefs(bool threadSafe = false)
         {
 #if UNITY_IOS
-        System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
+            System.Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
 #endif
+            this.threadSafe = threadSafe;
         }
 
         public int GetInt(string key, int defaultValue)
@@ -31,7 +34,6 @@ namespace DRG.Data
             return PlayerPrefs.GetString(key, defaultValue);
         }
 
-
         public bool GetBool(string key, bool defaultValue)
         {
             return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) == 1;
@@ -39,22 +41,78 @@ namespace DRG.Data
 
         public void SetInt(string key, int value)
         {
-            PlayerPrefs.SetInt(key, value);
+            if (threadSafe)
+            {
+                MainThreadDispatcher.Enqueue(OnMainThread);
+            }
+            else
+            {
+                OnMainThread();
+            }
+
+            return;
+
+            void OnMainThread()
+            {
+                PlayerPrefs.SetInt(key, value);
+            }
         }
 
         public void SetFloat(string key, float value)
         {
-            PlayerPrefs.SetFloat(key, value);
+            if (threadSafe)
+            {
+                MainThreadDispatcher.Enqueue(OnMainThread);
+            }
+            else
+            {
+                OnMainThread();
+            }
+
+            return;
+
+            void OnMainThread()
+            {
+                PlayerPrefs.SetFloat(key, value);
+            }
         }
 
         public void SetString(string key, string value)
         {
-            PlayerPrefs.SetString(key, value);
+            if (threadSafe)
+            {
+                MainThreadDispatcher.Enqueue(OnMainThread);
+            }
+            else
+            {
+                OnMainThread();
+            }
+
+            return;
+
+            void OnMainThread()
+            {
+                PlayerPrefs.SetString(key, value);
+            }
         }
 
         public void SetBool(string key, bool value)
         {
-            PlayerPrefs.SetInt(key, value ? 1 : 0);
+            if (threadSafe)
+            {
+                MainThreadDispatcher.Enqueue(OnMainThread);
+            }
+            else
+            {
+                OnMainThread();
+            }
+
+            return;
+
+            void OnMainThread()
+            {
+                PlayerPrefs.SetInt(key, value ? 1 : 0);
+            }
         }
 
         public bool ContainsKey(string key)
@@ -76,6 +134,5 @@ namespace DRG.Data
         {
             PlayerPrefs.Save();
         }
-
     }
 }

@@ -235,6 +235,8 @@ namespace DRG.Data
                     hasChanges |= record.isDirty;
                     record.Apply();
                 }
+
+                yield return null;
             }
 
             if (!hasChanges)
@@ -243,10 +245,10 @@ namespace DRG.Data
             }
 
             // Wait for all records of objects to be processed
-            while (true)
+            lock (lockObject)
             {
-                bool processed;
-                lock (lockObject)
+                var processed = false;
+                while (!processed && recordsObject.Count > 0)
                 {
                     processed = true;
                     foreach (var record in recordsObject)
@@ -254,13 +256,8 @@ namespace DRG.Data
                         processed &= record.Value.processed;
                     }
 
-                    if (processed || recordsObject.Count == 0)
-                    {
-                        break;
-                    }
+                    yield return null;
                 }
-
-                yield return null;
             }
 
             dataProvider.Save();

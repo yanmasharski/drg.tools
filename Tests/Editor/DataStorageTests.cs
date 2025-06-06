@@ -340,10 +340,7 @@ namespace DRG.Tests
                 // Execute immediately for testing, processing pending main thread actions
                 while (action.MoveNext())
                 {
-                    ProcessPendingActions();
                 }
-
-                ProcessPendingActions();
 
                 return new CommandMock();
             }
@@ -351,24 +348,7 @@ namespace DRG.Tests
             public IDebouncedExecutor.ICommand Execute(int framesCooldown, Action action)
             {
                 action.Invoke();
-                ProcessPendingActions();
                 return new CommandMock();
-            }
-
-            private static void ProcessPendingActions()
-            {
-                var dispatcherType = typeof(MainThreadDispatcher);
-                var actionsField = dispatcherType.GetField("actions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                if (actionsField == null)
-                {
-                    return;
-                }
-
-                var queue = (System.Collections.Concurrent.ConcurrentQueue<System.Action>)actionsField.GetValue(null);
-                while (queue != null && queue.TryDequeue(out var action))
-                {
-                    action?.Invoke();
-                }
             }
 
             private class CommandMock : IDebouncedExecutor.ICommand
