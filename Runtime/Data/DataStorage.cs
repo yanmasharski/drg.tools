@@ -243,18 +243,24 @@ namespace DRG.Data
             }
 
             // Wait for all records of objects to be processed
-            lock (lockObject)
+            while (true)
             {
-                var processed = false;
-                while (!processed && recordsObject.Count > 0)
+                bool processed;
+                lock (lockObject)
                 {
+                    processed = true;
                     foreach (var record in recordsObject)
                     {
                         processed &= record.Value.processed;
                     }
 
-                    yield return null;
+                    if (processed || recordsObject.Count == 0)
+                    {
+                        break;
+                    }
                 }
+
+                yield return null;
             }
 
             dataProvider.Save();

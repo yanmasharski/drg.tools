@@ -7,6 +7,8 @@ namespace DRG.Tests
     using DRG.Logs;
     using System;
     using System.Collections;
+    using System.Collections.Concurrent;
+    using System.Reflection;
     using UnityEngine;
     using UnityEngine.TestTools;
     using ILogger = DRG.Logs.ILogger;
@@ -220,6 +222,22 @@ namespace DRG.Tests
             Assert.That(retrievedRecord.isDirty, Is.False);
         }
 
+        [Test]
+        public void Save_WithObjectRecord_Completes()
+        {
+            // Arrange
+            const string key = "object_key";
+            var serializer = new DataSerializerUnity();
+            var record = dataStorage.GetObject(key, new TestObject { Value = 0 }, serializer);
+            record.SetValue(new TestObject { Value = 5 });
+
+            // Act
+            dataStorage.Save(0);
+
+            // Assert
+            Assert.That(record.isDirty, Is.False);
+        }
+
         [Serializable]
         private class TestObject
         {
@@ -319,10 +337,13 @@ namespace DRG.Tests
         {
             public IDebouncedExecutor.ICommand Execute(int framesCooldown, IEnumerator action)
             {
-                // Execute immediately for testing
+                // Execute immediately for testing, processing pending main thread actions
                 while (action.MoveNext())
                 {
+                    ProcessPendingActions();
                 }
+
+                ProcessPendingActions();
 
                 return new CommandMock();
             }
@@ -330,7 +351,24 @@ namespace DRG.Tests
             public IDebouncedExecutor.ICommand Execute(int framesCooldown, Action action)
             {
                 action.Invoke();
+                ProcessPendingActions();
                 return new CommandMock();
+            }
+
+            private static void ProcessPendingActions()
+            {
+                var dispatcherType = typeof(MainThreadDispatcher);
+                var actionsField = dispatcherType.GetField("actions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                if (actionsField == null)
+                {
+                    return;
+                }
+
+                var queue = (System.Collections.Concurrent.ConcurrentQueue<System.Action>)actionsField.GetValue(null);
+                while (queue != null && queue.TryDequeue(out var action))
+                {
+                    action?.Invoke();
+                }
             }
 
             private class CommandMock : IDebouncedExecutor.ICommand
