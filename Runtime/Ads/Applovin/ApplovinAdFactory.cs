@@ -9,10 +9,10 @@ namespace DRG.Ads
         private readonly string[] adUnits;
         private readonly IDebouncedExecutor debouncedExecutor;
 
-        private RewardedApplovin rewardedApplovin;
-        private InterstitialApplovin interstitialApplovin;
-
-        public bool isInitialized { get; private set; }
+        private RewardedApplovin rewarded;
+        private InterstitialApplovin interstitial;
+        
+        private bool initCalled = false;
 
         public ApplovinAdFactory(string appKey, IDebouncedExecutor debouncedExecutor, string[] adUnits = null)
         {
@@ -30,28 +30,26 @@ namespace DRG.Ads
 
         public void Initialize()
         {
-            if (isInitialized)
+            if (initCalled)
             {
                 return;
             }
 
-            isInitialized = true;
-
             MaxSdk.SetSdkKey(appKey);
             MaxSdk.InitializeSdk(adUnits);
-            isInitialized = true;
+            initCalled = true;
         }
 
         public IFullscreenAd GetRewardedVideo(string adUnitId)
         {
             Initialize();
-            return rewardedApplovin ??= new RewardedApplovin(adUnitId, debouncedExecutor);
+            return rewarded ??= new RewardedApplovin(adUnitId, debouncedExecutor);
         }
 
         public IFullscreenAd GetInterstitial(string adUnitId)
         {
             Initialize();
-            return interstitialApplovin ??= new InterstitialApplovin(adUnitId, debouncedExecutor);
+            return interstitial ??= new InterstitialApplovin(adUnitId, debouncedExecutor);
         }
 
         private void SdkInitializedEvent(MaxSdkBase.SdkConfiguration sdkConfiguration)

@@ -8,10 +8,10 @@ namespace DRG.Ads
         public string placement { get; }
         public bool success { get; }
 
-        public AdImpressionApplovin(AdFormat format, string provider, string placement, bool success)
+        public AdImpressionApplovin(AdFormat format, string placement, bool success)
         {
             this.format = format;
-            this.provider = provider;
+            provider = "Applovin";
             this.placement = placement;
             this.success = success;
         }
