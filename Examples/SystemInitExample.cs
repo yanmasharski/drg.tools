@@ -13,7 +13,7 @@ namespace DRG.Examples
             var logger = new LoggerUnity();
             var signalBus = new SignalBus(logger);
             var debouncedExecutor = new DebouncedExecutorUnity(StaticMonoBehaviour.instance, logger);
-
+#if DRG_APPLOVIN
             var applovinAdFactory = new ApplovinAdFactory("appKey", debouncedExecutor);
             var interstitial = applovinAdFactory.GetInterstitial("interstitial_adUnitId");
             var rewarded = applovinAdFactory.GetRewardedVideo("rewardedVideo_adUnitId");
@@ -21,8 +21,9 @@ namespace DRG.Examples
                 new InterstitalBalancer(interstitial),
                 new FullscreenAdAuction(new[] { interstitial, rewarded }, AdFormat.Rewarded),
                 logger);
-            
+
             adsController.onAdCompleted += AdCompleted;
+#endif
             return;
 
             void AdCompleted(IAdImpression obj)
