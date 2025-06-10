@@ -5,7 +5,7 @@
         "DRG.Tools",
         "UnityEngine.TestRunner",
         "nunit.framework",
-        "UnityEditor.TestRunner",
+        "UnityEditor.TestRunner"
     ],
     "includePlatforms": [
         "Editor"
