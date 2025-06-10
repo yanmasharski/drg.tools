@@ -7,13 +7,14 @@ namespace DRG.Ads
 
     public class InterstitialApplovin : IFullscreenAd
     {
-        private const string PROVIDER_NAME = "Applovin";
         private readonly string adUnitId;
         private readonly IDebouncedExecutor debouncedExecutor;
 
         private IDebouncedExecutor.ICommand loadCommand;
         
         private Action<IAdImpression> callback;
+        private string placement = "";
+        private int retryCount = 0;
 
         public InterstitialApplovin(string adUnitId, IDebouncedExecutor debouncedExecutor)
         {
@@ -40,9 +41,6 @@ namespace DRG.Ads
         public bool isReady => MaxSdk.IsInterstitialReady(adUnitId);
         public float bid { get; private set; }
 
-        private string placement = "";
-        private int retryCount = 0;
-
         public void Show(Action<IAdImpression> callback, string placement = "")
         {
             this.callback = callback;
@@ -67,7 +65,7 @@ namespace DRG.Ads
                 return;
             }
 
-            callback?.Invoke(new AdImpressionApplovin(AdFormat.Interstitial, PROVIDER_NAME, placement, false));
+            callback?.Invoke(new AdImpressionApplovin(AdFormat.Interstitial, placement, false));
             LoadAd();
         }
 
@@ -78,7 +76,7 @@ namespace DRG.Ads
                 return;
             }
 
-            callback?.Invoke(new AdImpressionApplovin(AdFormat.Interstitial, PROVIDER_NAME, placement, true));
+            callback?.Invoke(new AdImpressionApplovin(AdFormat.Interstitial, placement, true));
             LoadAd();
         }
 
